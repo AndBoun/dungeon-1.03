@@ -71,6 +71,8 @@ typedef struct {
     int current_up_stair_idx;
     int current_down_stair_idx;
 
+    int non_tunneling_dist_map [DUNGEON_HEIGHT][DUNGEON_WIDTH];
+    int tunneling_dist_map [DUNGEON_HEIGHT][DUNGEON_WIDTH];
 } Dungeon;
 
 
@@ -90,6 +92,7 @@ void print_room_info(const Dungeon *d);
 void print_hardness_info(const Dungeon *d);
 void print_grid(const Dungeon *d);
 
+int place_player(Dungeon *d);
 bool generate_random_dungeon(Dungeon *d);
 
 #endif
