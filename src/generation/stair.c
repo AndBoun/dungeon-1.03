@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "dungeon.h"
+#include <dungeon.h>
 
 bool place_stair(Dungeon *d, int x, int y, char stair) {
     if (x > 0 && x <= PLACABLE_WIDTH && y > 0 && y < PLACABLE_HEIGHT) {

@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dungeon.h"
+#include <dungeon.h>
 
 /**
  * Determines if a room can be placed at the specified location in the grid.

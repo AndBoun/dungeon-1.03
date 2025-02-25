@@ -2,7 +2,7 @@
 // Created by Andrew Boun on 2/11/25.
 //
 
-#include "dungeon.h"
+#include <dungeon.h>
 #include <stdlib.h>
 
 // Function to initialize a dungeon instance

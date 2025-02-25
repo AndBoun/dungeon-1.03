@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dungeon.h"
+#include <dungeon.h>
 
 void print_hardness_info(const Dungeon *d){
     for (int i = 0; i < DUNGEON_HEIGHT; i++){

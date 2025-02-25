@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "dungeon.h"
+#include <dungeon.h>
 #include "load_save.h"
 
 int main(int argc, char *argv[]) {

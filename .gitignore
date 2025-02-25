@@ -60,6 +60,7 @@ Lectures/.DS_Store
 
 /.idea
 /.vscode
+/obj
 
 # C/C++ Source Files (explicitly allow)
 !*.c

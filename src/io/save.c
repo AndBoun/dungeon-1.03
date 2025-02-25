@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "dungeon.h"
+#include <dungeon.h>
 #include "load_save.h"
 
 int calculate_size(Dungeon *d){

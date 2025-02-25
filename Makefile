@@ -1,33 +1,55 @@
-all: main
+CC = gcc
+CFLAGS = -g -Wall -Werror
+INCLUDE_DIR = include
+SRC_DIR = src
+OBJ_DIR = obj
 
-main: main.o generator.o print.o room.o stair.o dungeon.o load.o save.o
-	gcc -g main.o generator.o print.o room.o stair.o dungeon.o load.o save.o -o main
+# Create directory structure for object files
+DIRS = $(OBJ_DIR) $(OBJ_DIR)/core $(OBJ_DIR)/generation $(OBJ_DIR)/io
 
-save.o: save.c load_save.h dungeon.h
-	gcc -g save.c -c -Wall -Werror
+# Source files
+CORE_SRC = $(wildcard $(SRC_DIR)/core/*.c)
+GEN_SRC = $(wildcard $(SRC_DIR)/generation/*.c)
+IO_SRC = $(wildcard $(SRC_DIR)/io/*.c)
+MAIN_SRC = $(SRC_DIR)/main.c
 
-load.o: load.c load_save.h dungeon.h
-	gcc -g load.c -c -Wall -Werror
+# Object files
+CORE_OBJ = $(patsubst $(SRC_DIR)/core/%.c, $(OBJ_DIR)/core/%.o, $(CORE_SRC))
+GEN_OBJ = $(patsubst $(SRC_DIR)/generation/%.c, $(OBJ_DIR)/generation/%.o, $(GEN_SRC))
+IO_OBJ = $(patsubst $(SRC_DIR)/io/%.c, $(OBJ_DIR)/io/%.o, $(IO_SRC))
+MAIN_OBJ = $(OBJ_DIR)/main.o
 
-print.o: print.c dungeon.h
-	gcc -g print.c -c -Wall -Werror
+# All objects
+ALL_OBJ = $(CORE_OBJ) $(GEN_OBJ) $(IO_OBJ) $(MAIN_OBJ)
 
-room.o: room.c dungeon.h
-	gcc -g room.c -c -Wall -Werror
+# Target executable
+TARGET = dungeon
 
-stair.o: stair.c dungeon.h
-	gcc -g stair.c -c -Wall -Werror
+all: dirs $(TARGET)
 
-generator.o: generator.c dungeon.h
-	gcc -g generator.c -c -Wall -Werror
+dirs:
+	@mkdir -p $(DIRS)
 
-dungeon.o: dungeon.c dungeon.h
-	gcc -g dungeon.c -c -Wall -Werror
+$(TARGET): $(ALL_OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
 
-main.o: main.c dungeon.h load_save.h
-	gcc -g main.c -c -Wall -Werror
+# Compile main.c
+$(OBJ_DIR)/main.o: $(MAIN_SRC)
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
+# Compile core files
+$(OBJ_DIR)/core/%.o: $(SRC_DIR)/core/%.c $(INCLUDE_DIR)/dungeon.h
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
+# Compile generation files
+$(OBJ_DIR)/generation/%.o: $(SRC_DIR)/generation/%.c $(INCLUDE_DIR)/dungeon.h
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+# Compile IO files
+$(OBJ_DIR)/io/%.o: $(SRC_DIR)/io/%.c $(INCLUDE_DIR)/dungeon.h $(INCLUDE_DIR)/load_save.h
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 clean:
-	rm -f *.o *~ main
+	rm -rf $(OBJ_DIR) $(TARGET)
+
+.PHONY: all dirs clean
