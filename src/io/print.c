@@ -59,12 +59,19 @@ void print_dist_map(const int dist_map[DUNGEON_HEIGHT][DUNGEON_WIDTH]){
     for (int i = 0; i < DUNGEON_HEIGHT; i++){
         printf("%c", VERTICAL_BORDER);
         for (int j = 0; j < DUNGEON_WIDTH; j++){
-            if (dist_map[i][j] == 0){
-                printf("%c", PLAYER);
-            }else if (dist_map[i][j] == INF || dist_map[i][j] == -1){
-                printf(" ");
-            } else {
-                printf("%d", dist_map[i][j] % 10);
+            switch (dist_map[i][j]) {
+                case 0:
+                    printf("%c", PLAYER);
+                    break;
+                case INF:
+                    printf(" ");
+                    break;
+                case -1:
+                    printf("X");
+                    break;
+                default:
+                    printf("%d", dist_map[i][j] % 10);
+                    break;
             }
         }
         printf("%c", VERTICAL_BORDER);
