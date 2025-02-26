@@ -105,17 +105,20 @@ static int find_all_paths(
             if (next_x >= 0 && next_x < cols &&
                 next_y >= 0 && next_y < rows) {
                 
-                int hardness = d->grid[next_y][next_x].hardness;
+                int curr_hardness = d->grid[curr_y][curr_x].hardness;
                 int edge_cost = 0;
                 
+                // Check if movement is valid based on tunneling
+                int neighbor_hardness = d->grid[next_y][next_x].hardness;
+                
                 if (!tunneling) {
-                    if (hardness != 0)
+                    if (neighbor_hardness != 0)
                         continue;
                     edge_cost = 1;
                 } else {
-                    if (hardness == MAX_HARDNESS)
+                    if (neighbor_hardness == MAX_HARDNESS)
                         continue;
-                    edge_cost = 1 + (hardness / 85);
+                    edge_cost = 1 + (curr_hardness / 85);
                 }
                 
                 int new_dist = dist_map[curr_y][curr_x] + edge_cost;
