@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <dungeon.h>
-#include "load_save.h"
+#include <load_save.h>
 
 static int calculate_size(Dungeon *d){
     int size = 12 + 4 + 4 + 2 + 1680 
