@@ -1,0 +1,71 @@
+commit 02cb7fd74585686d833cbf3d88af8293fb056524
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Wed Feb 26 02:46:06 2025 -0600
+
+    Update README with project setup instructions and usage examples
+
+commit f64db226afe2d32126ddf443432f153893e31d9e
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Wed Feb 26 02:16:19 2025 -0600
+
+    fix cost calculation in dijkstras
+
+commit 1c159223902e1d8fac4bbddff8448beb9e73330a
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Wed Feb 26 01:35:48 2025 -0600
+
+    refactor to remove unnessecary graph arrays. Added support for displaying bonus maps
+
+commit 1f81f5950ada141019a8cd3cab8647779425cb29
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Wed Feb 26 01:06:29 2025 -0600
+
+    Fix dijkstras implementation. Add printing distance maps methods.
+
+commit 62b88ae947f0a310cd9b8844bde4e84233918d6d
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Tue Feb 25 20:59:47 2025 -0600
+
+    implement dijkstras algorithm
+
+commit 06a4b4f8b12d45e2a50eed85f035bd860a73e590
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Tue Feb 25 19:11:13 2025 -0600
+
+    Fix swapped macros of placeable width and height that broke the program.
+
+commit 6357d4f9e03032d6deec5bf7c77e836880db5c4f
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Tue Feb 25 18:42:06 2025 -0600
+
+    Refactor load and save functions to be static for better encapsulation
+
+commit 1e3ecbda2cff52a7e748c36f2badf4ecdd8bd52a
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Tue Feb 25 18:25:35 2025 -0600
+
+    Made Priority queue indexed and generic
+
+commit f991178ce0569ce09c2033969ce8bebac04f662c
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Tue Feb 25 04:05:04 2025 -0600
+
+    Reorganization creation of priority queue
+
+commit 990e8d994dd154246f4f1563858ee1bfa07edd79
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Mon Feb 24 20:35:48 2025 -0600
+
+    Reorganize files into folders
+
+commit 868a50b9d19423b32d1fee1dec2aadc31b695566
+Author: AndBoun <167598896+AndBoun@users.noreply.github.com>
+Date:   Mon Feb 24 19:58:25 2025 -0600
+
+    Add Dungeon 1.02
+
+commit 582ee6379b925ddaa684a1bb46c89798dd190e96
+Author: Andrew Boun <167598896+AndBoun@users.noreply.github.com>
+Date:   Mon Feb 24 00:56:27 2025 -0600
+
+    Initial commit
