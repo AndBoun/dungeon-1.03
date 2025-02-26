@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (load_flag) {
-        load_save(&d);
+        load(&d);
         print_grid(&d);
     } else {
         if (generate_random_dungeon(&d)) {
@@ -49,9 +49,7 @@ int main(int argc, char *argv[]) {
         printf("Dungeon saved.\n");
     }
 
-    free(d.rooms);
-    free(d.up_stairs);
-    free(d.down_stairs);
+    destroy_dungeon(&d);
 
     return 0;
 }

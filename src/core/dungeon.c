@@ -113,3 +113,10 @@ int place_player(Dungeon *d){
 
     return 1;
 }
+
+void destroy_dungeon(Dungeon *d){
+    free(d->rooms);
+    free(d->up_stairs);
+    free(d->down_stairs);
+    return;
+}

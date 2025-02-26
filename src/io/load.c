@@ -228,7 +228,7 @@ int fill_in_corridors(Dungeon *d) {
     return 0;
 }
 
-int load_save(Dungeon *d){
+int load(Dungeon *d){
     int r, u, down;
 
     LoadSave ls;

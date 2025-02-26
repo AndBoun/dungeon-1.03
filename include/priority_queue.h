@@ -5,43 +5,42 @@
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 
-// Node structure for the priority queue
-typedef struct {
-    int vertex;    // Vertex identifier
-    int distance;  // Distance (priority) value
-    int x, y; // Coordinates of the vertex
+typedef struct PQNode {
+    int key;        // Key used for indexing (e.g., vertex id)
+    void* data;     // Associated data
+    int priority;   // Priority value
 } PQNode;
 
-// Priority queue structure
-typedef struct {
-    PQNode* heap;     // The actual heap array
-    int* positions;   // Map from vertex IDs to their positions in the heap
-    int size;         // Current size of the heap
-    int capacity;     // Maximum capacity of the heap
+typedef struct PriorityQueue {
+    PQNode* heap;   // Binary heap array
+    int* index;     // Maps key -> heap position
+    int* rev_index; // Maps heap position -> key
+    int size;       // Current size
+    int capacity;   // Maximum capacity
+    int key_range;  // Maximum key value + 1
+    void* (*copy)(const void*);    // Copy function for data
+    void (*destroy)(void*);        // Cleanup function for data
 } PriorityQueue;
 
-// Create a priority queue with given maximum size
-PriorityQueue* pq_create(int max_size);
+// Create new priority queue that can handle keys from 0 to key_range-1
+PriorityQueue* pq_create(int capacity, int key_range, 
+                        void* (*copy)(const void*),
+                        void (*destroy)(void*));
 
-// Free all memory used by the priority queue
 void pq_destroy(PriorityQueue* pq);
-
-// Check if the priority queue is empty
 int pq_is_empty(PriorityQueue* pq);
 
-// Insert a vertex with its distance into the priority queue
-void pq_insert(PriorityQueue* pq, int vertex, int distance, int x, int y);
+// Check if a key exists in the queue
+int pq_contains(PriorityQueue* pq, int key);
 
-// Extract the vertex with minimum distance
-int pq_extract_min(PriorityQueue* pq);
+// Insert/update operations now take a key instead of comparing data
+void pq_insert(PriorityQueue* pq, int key, void* data, int priority);
+void* pq_extract_min(PriorityQueue* pq);
+void pq_update_priority(PriorityQueue* pq, int key, int new_priority);
+int pq_get_priority(PriorityQueue* pq, int key);
 
-// Check if a vertex is in the priority queue
-int pq_contains(PriorityQueue* pq, int vertex);
+// New operations specific to indexed PQ
+int pq_get_min_key(PriorityQueue* pq);
+void* pq_get_data(PriorityQueue* pq, int key);
 
-// Update (decrease) the distance of a vertex in the queue
-void pq_decrease_key(PriorityQueue* pq, int vertex, int new_distance);
-
-// Get the current distance of a vertex in the queue
-int pq_get_distance(PriorityQueue* pq, int vertex);
-
-#endif // PRIORITY_QUEUE_H
+#endif

@@ -5,35 +5,40 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include "priority_queue.h"
+#include <priority_queue.h>
 
 // Initialize a new priority queue
-PriorityQueue* pq_create(int max_size) {
-    PriorityQueue* pq = (PriorityQueue*)malloc(sizeof(PriorityQueue));
-    if (!pq) {
-        return NULL;
-    }
+PriorityQueue* pq_create(
+    int capacity,
+    int key_range,
+    void* (*copy)(const void*),
+    void (*destroy)(void*)
+) {
+    PriorityQueue* pq = malloc(sizeof(PriorityQueue));
+    if (!pq) return NULL;
     
-    pq->heap = malloc(max_size * sizeof(PQNode));
-    if (!pq->heap) {
-        free(pq);
-        return NULL;
-    }
+    pq->heap = malloc(capacity * sizeof(PQNode));
+    pq->index = malloc(key_range * sizeof(int));
+    pq->rev_index = malloc(capacity * sizeof(int));
     
-    pq->positions = malloc(max_size * sizeof(int));
-    if (!pq->positions) {
+    if (!pq->heap || !pq->index || !pq->rev_index) {
         free(pq->heap);
+        free(pq->index);
+        free(pq->rev_index);
         free(pq);
         return NULL;
+    }
+    
+    // Initialize index arrays to -1 (not present)
+    for (int i = 0; i < key_range; i++) {
+        pq->index[i] = -1;
     }
     
     pq->size = 0;
-    pq->capacity = max_size;
-    
-    // Initialize all positions to -1 (not in heap)
-    for (int i = 0; i < max_size; i++) {
-        pq->positions[i] = -1;
-    }
+    pq->capacity = capacity;
+    pq->key_range = key_range;
+    pq->copy = copy;
+    pq->destroy = destroy;
     
     return pq;
 }
@@ -41,8 +46,14 @@ PriorityQueue* pq_create(int max_size) {
 // Free all memory used by the priority queue
 void pq_destroy(PriorityQueue* pq) {
     if (pq) {
+        for (int i = 0; i < pq->size; i++) {
+            if (pq->destroy) {
+                pq->destroy(pq->heap[i].data);
+            }
+        }
         free(pq->heap);
-        free(pq->positions);
+        free(pq->index);
+        free(pq->rev_index);
         free(pq);
     }
 }
@@ -67,20 +78,25 @@ static int right_child(int i) {
     return 2 * i + 2;
 }
 
-// Swap two nodes in the heap and update their positions
+static void update_indices(PriorityQueue* pq, int heap_pos, int key) {
+    pq->index[key] = heap_pos;
+    pq->rev_index[heap_pos] = key;
+}
+
+// Swap two nodes in the heap
 static void pq_swap(PriorityQueue* pq, int i, int j) {
     PQNode temp = pq->heap[i];
     pq->heap[i] = pq->heap[j];
     pq->heap[j] = temp;
     
-    // Update positions
-    pq->positions[pq->heap[i].vertex] = i;
-    pq->positions[pq->heap[j].vertex] = j;
+    // Update index mappings
+    update_indices(pq, i, pq->heap[i].key);
+    update_indices(pq, j, pq->heap[j].key);
 }
 
 // Maintain heap property by moving a node upward
 static void heapify_up(PriorityQueue* pq, int i) {
-    while (i > 0 && pq->heap[i].distance < pq->heap[parent(i)].distance) {
+    while (i > 0 && pq->heap[i].priority < pq->heap[parent(i)].priority) {
         pq_swap(pq, i, parent(i));
         i = parent(i);
     }
@@ -92,11 +108,11 @@ static void heapify_down(PriorityQueue* pq, int i) {
     int left = left_child(i);
     int right = right_child(i);
     
-    if (left < pq->size && pq->heap[left].distance < pq->heap[smallest].distance) {
+    if (left < pq->size && pq->heap[left].priority < pq->heap[smallest].priority) {
         smallest = left;
     }
     
-    if (right < pq->size && pq->heap[right].distance < pq->heap[smallest].distance) {
+    if (right < pq->size && pq->heap[right].priority < pq->heap[smallest].priority) {
         smallest = right;
     }
     
@@ -106,77 +122,68 @@ static void heapify_down(PriorityQueue* pq, int i) {
     }
 }
 
-// Insert a vertex with its distance into the priority queue
-void pq_insert(PriorityQueue* pq, int vertex, int distance, int x, int y) {
-    if (pq->size >= pq->capacity) {
-        // Queue is full
+// Insert a data with its priority into the priority queue
+void pq_insert(PriorityQueue* pq, int key, void* data, int priority) {
+    if (pq->size >= pq->capacity || key >= pq->key_range || pq->index[key] != -1) {
         return;
     }
     
-    // Create new node
-    int i = pq->size;
-    pq->heap[i].vertex = vertex;
-    pq->heap[i].x = x;
-    pq->heap[i].y = y;
-    pq->heap[i].distance = distance;
-    pq->positions[vertex] = i;
-    pq->size++;
+    int i = pq->size++;
+    pq->heap[i].key = key;
+    pq->heap[i].data = pq->copy ? pq->copy(data) : data;
+    pq->heap[i].priority = priority;
     
-    // Fix the heap property
+    update_indices(pq, i, key);
     heapify_up(pq, i);
 }
 
-// Extract the vertex with minimum distance
-int pq_extract_min(PriorityQueue* pq) {
-    if (pq_is_empty(pq)) {
-        return -1; // Error: queue is empty
-    }
+// Extract the data with minimum priority
+void* pq_extract_min(PriorityQueue* pq) {
+    if (pq_is_empty(pq)) return NULL;
     
-    int min_vertex = pq->heap[0].vertex;
+    void* min_data = pq->heap[0].data;
+    int min_key = pq->heap[0].key;
     
-    // Replace root with last element
-    pq->heap[0] = pq->heap[pq->size - 1];
-    pq->positions[pq->heap[0].vertex] = 0;
-    
-    // Mark the extracted vertex as not in heap
-    pq->positions[min_vertex] = -1;
-    
-    // Reduce size and fix heap
     pq->size--;
-    heapify_down(pq, 0);
-    
-    return min_vertex;
-}
-
-// Check if a vertex is in the priority queue
-int pq_contains(PriorityQueue* pq, int vertex) {
-    return (vertex >= 0 && vertex < pq->capacity) ? (pq->positions[vertex] != -1) : 0;
-}
-
-// Update (decrease) the distance of a vertex in the queue
-void pq_decrease_key(PriorityQueue* pq, int vertex, int new_distance) {
-    int i = pq->positions[vertex];
-    
-    if (i == -1) {
-        // Vertex not in queue
-        return;
+    if (pq->size > 0) {
+        pq->heap[0] = pq->heap[pq->size];
+        update_indices(pq, 0, pq->heap[0].key);
+        heapify_down(pq, 0);
     }
     
-    // Update distance only if it's smaller
-    if (new_distance < pq->heap[i].distance) {
-        pq->heap[i].distance = new_distance;
-        heapify_up(pq, i);
-    }
+    pq->index[min_key] = -1;
+    return min_data;
 }
 
-// Get the current distance of a vertex in the queue
-int pq_get_distance(PriorityQueue* pq, int vertex) {
-    int i = pq->positions[vertex];
+// Update the priority of a data in the queue
+void pq_update_priority(PriorityQueue* pq, int key, int new_priority) {
+    int pos = pq->index[key];
+    if (pos == -1) return;
     
-    if (i == -1) {
-        // Vertex not in queue
-        return INT_MAX;
-    }
+    int old_priority = pq->heap[pos].priority;
+    pq->heap[pos].priority = new_priority;
     
-    return pq->heap[i].distance;
+    if (new_priority < old_priority)
+        heapify_up(pq, pos);
+    else
+        heapify_down(pq, pos);
+}
+
+// Get the current priority of a data in the queue
+int pq_get_priority(PriorityQueue* pq, int key) {
+    int pos = pq->index[key];
+    return (pos != -1) ? pq->heap[pos].priority : INT_MAX;
+}
+
+int pq_contains(PriorityQueue* pq, int key) {
+    return key < pq->key_range && pq->index[key] != -1;
+}
+
+int pq_get_min_key(PriorityQueue* pq) {
+    return pq_is_empty(pq) ? -1 : pq->heap[0].key;
+}
+
+void* pq_get_data(PriorityQueue* pq, int key) {
+    int pos = pq->index[key];
+    return (pos != -1) ? pq->heap[pos].data : NULL;
 }
