@@ -25,7 +25,7 @@ int init_load_save(LoadSave *ls, const char *mode) {
     return 0;
 }
 
-char* load_marker(LoadSave *ls) {
+static char* load_marker(LoadSave *ls) {
     char* marker = malloc(13);  // 12 bytes + 1 for null terminator
 
     // Read exactly 12 bytes
@@ -42,7 +42,7 @@ char* load_marker(LoadSave *ls) {
     return marker;
 }
 
-int load_version(LoadSave *ls) {
+static int load_version(LoadSave *ls) {
     uint32_t version;
 
     // Read exactly 4 bytes
@@ -57,7 +57,7 @@ int load_version(LoadSave *ls) {
     return version;
 }
 
-int load_size(LoadSave *ls) {
+static int load_size(LoadSave *ls) {
     uint32_t size;
 
     // Read exactly 4 bytes
@@ -72,7 +72,7 @@ int load_size(LoadSave *ls) {
     return size;
 }
 
-int load_pc(LoadSave *ls, Dungeon *d) {
+static int load_pc(LoadSave *ls, Dungeon *d) {
     u_int8_t pc[2]; // player character
 
     // Read exactly 2 bytes
@@ -88,7 +88,7 @@ int load_pc(LoadSave *ls, Dungeon *d) {
     return 0;
 }
 
-int load_hardness(LoadSave *ls, Dungeon *d) {
+static int load_hardness(LoadSave *ls, Dungeon *d) {
     uint8_t *hardness = malloc(1680); // 1680 bytes for hardness
 
     // Read exactly 1680 bytes
@@ -106,7 +106,7 @@ int load_hardness(LoadSave *ls, Dungeon *d) {
     return 0;
 }
 
-int load_num_rooms(LoadSave *ls, Dungeon *d) {
+static int load_num_rooms(LoadSave *ls, Dungeon *d) {
     uint16_t num_rooms;
     
     if (fread(&num_rooms, sizeof(uint16_t), 1, ls->f) != 1) {
@@ -122,7 +122,7 @@ int load_num_rooms(LoadSave *ls, Dungeon *d) {
     return 0;
 }
 
-int load_rooms(LoadSave *ls, Dungeon *d, int r){
+static int load_rooms(LoadSave *ls, Dungeon *d, int r){
     u_int8_t rooms[r * 4]; // 4 bytes per room
 
     if(fread(rooms, sizeof(u_int8_t), r * 4, ls->f) != r * 4){
@@ -147,7 +147,7 @@ int load_rooms(LoadSave *ls, Dungeon *d, int r){
     return 0;
 }
 
-int load_num_up_stairs(LoadSave *ls, Dungeon *d) {
+static int load_num_up_stairs(LoadSave *ls, Dungeon *d) {
     uint16_t num_up_stairs;
 
     if (fread(&num_up_stairs, sizeof(uint16_t), 1, ls->f) != 1) {
@@ -163,7 +163,7 @@ int load_num_up_stairs(LoadSave *ls, Dungeon *d) {
     return 0;
 }
 
-int load_up_stairs(LoadSave *ls, Dungeon *d, int u) {
+static int load_up_stairs(LoadSave *ls, Dungeon *d, int u) {
     u_int8_t up_stairs[u * 2]; // 2 bytes per up_stairs
 
     if (fread(up_stairs, sizeof(u_int8_t), u * 2, ls->f) != u * 2) {
@@ -182,7 +182,7 @@ int load_up_stairs(LoadSave *ls, Dungeon *d, int u) {
     return 0;
 }
 
-int load_num_down_stairs(LoadSave *ls, Dungeon *d) {
+static int load_num_down_stairs(LoadSave *ls, Dungeon *d) {
     uint16_t num_down_stairs;
 
     if (fread(&num_down_stairs, sizeof(uint16_t), 1, ls->f) != 1) {
@@ -198,7 +198,7 @@ int load_num_down_stairs(LoadSave *ls, Dungeon *d) {
     return 0;
 }
 
-int load_down_stairs(LoadSave *ls, Dungeon *d, int down) {
+static int load_down_stairs(LoadSave *ls, Dungeon *d, int down) {
     u_int8_t down_stairs[down * 2]; // 2 bytes per down_stairs
 
     if (fread(down_stairs, sizeof(u_int8_t), down * 2, ls->f) != down * 2) {
@@ -216,7 +216,7 @@ int load_down_stairs(LoadSave *ls, Dungeon *d, int down) {
     return 0;
 }
 
-int fill_in_corridors(Dungeon *d) {
+static int fill_in_corridors(Dungeon *d) {
     for (int i = 0; i < DUNGEON_HEIGHT; i++) {
         for (int j = 0; j < DUNGEON_WIDTH; j++) {
             if (d->grid[i][j].type == ROCK && d->grid[i][j].hardness == 0) {

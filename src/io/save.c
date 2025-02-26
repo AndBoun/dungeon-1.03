@@ -9,7 +9,7 @@
 #include <dungeon.h>
 #include "load_save.h"
 
-int calculate_size(Dungeon *d){
+static int calculate_size(Dungeon *d){
     int size = 12 + 4 + 4 + 2 + 1680 
                 + 2 + (d->num_rooms * 4) 
                 + 2 + (d->num_up_stairs * 2) 

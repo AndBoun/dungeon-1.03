@@ -32,23 +32,8 @@ typedef struct {
 } LoadSave;
 
 int init_load_save(LoadSave *ls, const char *mode);
-
-char* load_marker(LoadSave *ls);
-int load_version(LoadSave *ls);
-int load_size(LoadSave *ls);
-int load_pc(LoadSave *ls, Dungeon *d);
-int load_hardness(LoadSave *ls, Dungeon *d);
-int load_num_rooms(LoadSave *ls, Dungeon *d);
-int load_rooms(LoadSave *ls, Dungeon *d, int r);
-int load_num_up_stairs(LoadSave *ls, Dungeon *d);
-int load_up_stairs(LoadSave *ls, Dungeon *d, int u);
-int load_num_down_stairs(LoadSave *ls, Dungeon *d);
-int load_down_stairs(LoadSave *ls, Dungeon *d, int down);
-int fill_in_corridors(Dungeon *d);
-
 int load(Dungeon *d);
-
 int save(Dungeon *d);
-int calculate_size(Dungeon *d);
+
 
 #endif
