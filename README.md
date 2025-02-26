@@ -31,7 +31,7 @@ Run the project with flags (or no flags):
 ./dungeon --load --save
 ```
 
-> [!NOTE] Dungeon File
+> # Dungeon File
 > Whenever a save or load occurs, it uses the file called `dungeon`. This doesn't have any extension and cannot have one for loading to work.
 
 # Main Files:
