@@ -49,3 +49,28 @@ void print_room_info(const Dungeon *d){
         printf("\n");
     }
 }
+
+void print_dist_map(const int dist_map[DUNGEON_HEIGHT][DUNGEON_WIDTH]){
+    for(int i = 0; i < DUNGEON_WIDTH + 2; i++){
+        printf("%c", HORIZONTAL_BORDER);
+    }
+    printf("\n");
+
+    for (int i = 0; i < DUNGEON_HEIGHT; i++){
+        printf("%c", VERTICAL_BORDER);
+        for (int j = 0; j < DUNGEON_WIDTH; j++){
+            if (dist_map[i][j] == INF){
+                printf("X");
+            } else {
+                printf("%d ", dist_map[i][j]);
+            }
+        }
+        printf("%c", VERTICAL_BORDER);
+        printf("\n");
+    }
+
+    for(int i = 0; i < DUNGEON_WIDTH + 2; i++){
+        printf("%c", HORIZONTAL_BORDER);
+    }
+    printf("\n");
+}

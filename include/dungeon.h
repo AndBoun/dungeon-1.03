@@ -7,6 +7,8 @@
 
 #include <stdbool.h>
 
+#define INF 1000000000
+
 // Character definitions for the Dungeon grid
 #define ROCK ' '
 #define FLOOR '.'
@@ -96,5 +98,7 @@ int place_random_player(Dungeon *d);
 bool generate_random_dungeon(Dungeon *d);
 
 void destroy_dungeon(Dungeon *d);
+
+void print_dist_map(const int dist_map[DUNGEON_HEIGHT][DUNGEON_WIDTH]);
 
 #endif

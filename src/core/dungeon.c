@@ -20,6 +20,13 @@ void init_dungeon(Dungeon *d) {
     d->down_stairs = NULL;
     d->current_up_stair_idx = 0;
     d->current_down_stair_idx = 0;
+
+    for (int i = 0; i < DUNGEON_HEIGHT; i++) {
+        for (int j = 0; j < DUNGEON_WIDTH; j++) {
+            d->non_tunneling_dist_map[i][j] = INF;
+            d->tunneling_dist_map[i][j] = INF;
+        }
+    }
 }
 
 bool generate_random_dungeon(Dungeon *d){
