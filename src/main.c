@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include <dungeon.h>
-#include "load_save.h"
+#include <load_save.h>
 
 int main(int argc, char *argv[]) {
     struct timeval tv;

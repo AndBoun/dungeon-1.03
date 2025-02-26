@@ -26,9 +26,6 @@ bool generate_random_dungeon(Dungeon *d){
     int i, j;
     int num_rooms;
 
-    // Discard first random value
-    rand();
-
     bool success = false;
 
     // Generate Rooms
@@ -94,13 +91,13 @@ bool generate_random_dungeon(Dungeon *d){
         generate_random_stair(d, DOWN_STAIRS, i);
     }
 
-    place_player(d);
+    place_random_player(d);
 
     return true;
 }
 
 // randomly places the player in the dungeon
-int place_player(Dungeon *d){
+int place_random_player(Dungeon *d){
     int x, y;
     do {
         x = rand() % PLACABLE_WIDTH + 1;

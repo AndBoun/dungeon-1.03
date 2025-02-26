@@ -22,8 +22,8 @@
 #define DUNGEON_WIDTH 80
 #define DUNGEON_HEIGHT 21
 
-#define PLACABLE_HEIGHT 78
-#define PLACABLE_WIDTH 19
+#define PLACABLE_WIDTH 78
+#define PLACABLE_HEIGHT 19
 
 #define MIN_ROOMS 6
 #define MAX_ROOMS 120
@@ -92,7 +92,7 @@ void print_room_info(const Dungeon *d);
 void print_hardness_info(const Dungeon *d);
 void print_grid(const Dungeon *d);
 
-int place_player(Dungeon *d);
+int place_random_player(Dungeon *d);
 bool generate_random_dungeon(Dungeon *d);
 
 void destroy_dungeon(Dungeon *d);
